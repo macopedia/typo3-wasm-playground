@@ -1,0 +1,32 @@
+{
+	"theme_color": "#ffffff",
+	"background_color": "#ffffff",
+	"display": "standalone",
+	"scope": "https://typo3-playground-edc132.macopedia.io/",
+	"start_url": "https://typo3-playground-edc132.macopedia.io/",
+	"short_name": "TYPO3 Playground",
+	"description": "TYPO3 Playground",
+	"name": "TYPO3 Playground",
+	"icons": [
+		{
+			"src": "https://playground.wordpress.net/logo-192.png",
+			"sizes": "192x192",
+			"type": "image/png"
+		},
+		{
+			"src": "https://playground.wordpress.net/logo-256.png",
+			"sizes": "256x256",
+			"type": "image/png"
+		},
+		{
+			"src": "https://playground.wordpress.net/logo-384.png",
+			"sizes": "384x384",
+			"type": "image/png"
+		},
+		{
+			"src": "https://playground.wordpress.net/logo-512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		}
+	]
+}

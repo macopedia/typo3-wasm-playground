@@ -1,0 +1,13 @@
+vendor/
+opfs/
+rest/
+dist/
+outdir/
+.idea/
+.vscode
+test.php
+run_phar.php
+run_src.php
+.phive
+vendor-bin
+new-wp

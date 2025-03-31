@@ -1,0 +1,9 @@
+FROM php:8.3-cli
+
+WORKDIR /app
+
+COPY packages/playground/php-cors-proxy/cors-proxy.php /app/cors-proxy.php
+
+EXPOSE 8912
+
+CMD ["php", "-S", "0.0.0.0:8912", "cors-proxy.php"]

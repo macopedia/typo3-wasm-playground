@@ -1,0 +1,67 @@
+{
+	"name": "php-wasm-util",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/php-wasm/util/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "nx:noop",
+			"dependsOn": ["build:README"]
+		},
+		"build:README": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"cp packages/php-wasm/util/README.md dist/packages/php-wasm/util"
+				]
+			},
+			"dependsOn": ["build:package-json"]
+		},
+		"build:package-json": {
+			"executor": "@typo3-playground/nx-extensions:package-json",
+			"options": {
+				"tsConfig": "packages/php-wasm/util/tsconfig.lib.json",
+				"outputPath": "dist/packages/php-wasm/util",
+				"buildTarget": "php-wasm-util:build:bundle:production"
+			}
+		},
+		"build:bundle": {
+			"executor": "@nx/vite:build",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"emptyOutDir": false,
+				"outputPath": "dist/packages/php-wasm/util"
+			}
+		},
+		"publish": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "node tools/scripts/publish.mjs php-wasm-util {args.ver} {args.tag}"
+			},
+			"dependsOn": ["build"]
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/php-wasm/util/**/*.ts"]
+			}
+		},
+		"test": {
+			"executor": "@nx/vite:test",
+			"outputs": ["{workspaceRoot}/coverage/packages/php-wasm/util"],
+			"options": {
+				"passWithNoTests": true,
+				"reportsDirectory": "../../../coverage/packages/php-wasm/util"
+			}
+		},
+		"test:esmcjs": {
+			"executor": "@typo3-playground/nx-extensions:assert-built-esm-and-cjs",
+			"options": {
+				"outputPath": "dist/packages/php-wasm/util"
+			},
+			"dependsOn": ["build"]
+		}
+	},
+	"tags": ["scope:independent-from-php-binaries"]
+}

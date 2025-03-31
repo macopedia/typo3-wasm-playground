@@ -1,0 +1,27 @@
+{
+	"private": true,
+	"name": "@typo3-playground/typo3-builds",
+	"version": "0.9.23",
+	"description": "TYPO3 Compilation Pipeline for the WordPress Playground",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WordPress/wordpress-playground"
+	},
+	"homepage": "https://developer.wordpress.org/playground",
+	"author": "The TYPO3 contributors",
+	"contributors": [
+		{
+			"name": "Łukasz Uznański",
+			"email": "l.uznanski@macopedia.com"
+		}
+	],
+	"main": "./index.js",
+	"types": "index.d.ts",
+	"typings": "./index.d.ts",
+	"license": "GPL-2.0-or-later",
+	"type": "module",
+	"engines": {
+		"node": ">=18.18.0",
+		"npm": ">=8.11.0"
+	}
+}

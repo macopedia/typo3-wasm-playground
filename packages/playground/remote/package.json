@@ -1,0 +1,28 @@
+{
+	"name": "@typo3-playground/remote",
+	"version": "1.0.25",
+	"description": "WordPress Playground remote host",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WordPress/wordpress-playground"
+	},
+	"homepage": "https://developer.wordpress.org/playground",
+	"author": "The WordPress contributors",
+	"contributors": [
+		{
+			"name": "Adam Zielinski",
+			"email": "adam@adamziel.com",
+			"url": "https://github.com/adamziel"
+		}
+	],
+	"license": "GPL-2.0-or-later",
+	"type": "module",
+	"files": [
+		"/lib",
+		"/index.d.ts"
+	],
+	"publishConfig": {
+		"access": "public",
+		"directory": "../../../dist/packages/playground/remote"
+	}
+}

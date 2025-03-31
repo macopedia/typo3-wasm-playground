@@ -1,0 +1,22 @@
+{
+	"extends": ["../../../.eslintrc.json"],
+	"ignorePatterns": ["!**/*"],
+	"overrides": [
+		{
+			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			"rules": {}
+		},
+		{
+			"files": ["*.ts", "*.tsx"],
+			"rules": {
+				// The remote package uses typo3-builds in a way that does
+				// not create a runtime dependency to an unpublished package.
+				"playground-dev/avoid-typo3-builds-dependency": 0
+			}
+		},
+		{
+			"files": ["*.js", "*.jsx"],
+			"rules": {}
+		}
+	]
+}

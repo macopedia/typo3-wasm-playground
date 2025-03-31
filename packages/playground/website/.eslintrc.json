@@ -1,0 +1,64 @@
+{
+	"extends": [
+		"plugin:cypress/recommended",
+		"plugin:cypress/recommended",
+		"plugin:cypress/recommended",
+		"plugin:@nx/react",
+		"../../../.eslintrc.json"
+	],
+	"ignorePatterns": ["!**/*"],
+	"overrides": [
+		{
+			"files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+			"rules": {
+				"@nx/enforce-module-boundaries": [
+					"error",
+					{
+						"enforceBuildableLibDependency": true,
+						"allow": [
+							"@typo3-playground/client",
+							"@typo3-playground/sync"
+						],
+						"depConstraints": [
+							{
+								"sourceTag": "*",
+								"notDependOnLibsWithTags": ["scope:web-client"]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"files": [
+				"demos/**/*",
+				"cypress/**/*",
+				"builder/**/*",
+				"vite.oauth.ts"
+			],
+			"rules": {
+				"no-console": 0
+			}
+		},
+		{
+			"files": ["*.ts", "*.tsx"],
+			"rules": {}
+		},
+		{
+			"files": ["*.js", "*.jsx"],
+			"rules": {}
+		},
+		{
+			"files": ["*.cy.{ts,js,tsx,jsx}", "cypress/**/*.{ts,js,tsx,jsx}"],
+			"rules": {}
+		},
+		{
+			"files": ["*.cy.{ts,js,tsx,jsx}", "cypress/**/*.{ts,js,tsx,jsx}"],
+			"rules": {}
+		},
+		{
+			"files": ["*.cy.{ts,js,tsx,jsx}", "cypress/**/*.{ts,js,tsx,jsx}"],
+			"rules": {}
+		}
+	]
+}

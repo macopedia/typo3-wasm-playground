@@ -1,0 +1,40 @@
+stages:
+    - cors-proxy
+    - deploy
+
+cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+        - node_modules/
+        - dist/
+        - .npm/
+
+pages:
+    stage: deploy
+    image: node:20
+    only:
+        - main
+    tags:
+        - latest
+        - typo3-playground
+    script:
+        - git submodule update --init --recursive
+        - npm install --prefer-offline --cache .npm
+        - npm run build
+        - mkdir -p public
+        - cp -r dist/packages/playground/wasm-typo3-net/* public/
+    artifacts:
+        paths:
+            - public
+
+cors-proxy:
+    stage: cors-proxy
+    tags:
+        - i6
+        - intergracja6
+    script:
+        - docker stop cors-proxy || true
+        - docker rm cors-proxy || true
+        - docker build -t cors-proxy $CI_PROJECT_DIR/packages/playground/php-cors-proxy && docker run -d --name cors-proxy -p 8912:80 cors-proxy
+    environment:
+        name: cors-proxy

@@ -1,0 +1,157 @@
+{
+	"name": "php-wasm-node",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/php-wasm/node/src",
+	"projectType": "library",
+	"implicitDependencies": ["php-wasm-compile"],
+	"targets": {
+		"build": {
+			"executor": "nx:noop",
+			"dependsOn": ["build:README", "build:dts"]
+		},
+		"build:README": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"cp packages/php-wasm/node/README.md dist/packages/php-wasm/node"
+				]
+			},
+			"dependsOn": ["build:mkdir"]
+		},
+		"build:copy-wasms": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"cp -rf packages/php-wasm/node/jspi dist/packages/php-wasm/node",
+					"cp -rf packages/php-wasm/node/asyncify dist/packages/php-wasm/node"
+				],
+				"parallel": false
+			},
+			"dependsOn": ["build:package-json"]
+		},
+		"build:package-json": {
+			"executor": "@typo3-playground/nx-extensions:package-json",
+			"options": {
+				"tsConfig": "packages/php-wasm/node/tsconfig.lib.json",
+				"outputPath": "dist/packages/php-wasm/node",
+				"buildTarget": "php-wasm-node:build:bundle:production"
+			},
+			"dependsOn": ["build:mkdir"]
+		},
+		"build:dts": {
+			"executor": "nx:run-commands",
+			"options": {
+				"cwd": "packages/php-wasm/node",
+				"commands": [
+					"npx -p typescript tsc --project tsconfig.lib.json --declaration --allowJs --emitDeclarationOnly --outDir ../../../dist/packages/php-wasm/out-tsc-phpwasm-node",
+					"cp -r ../../../dist/packages/php-wasm/out-tsc-phpwasm-node/packages/php-wasm/node/src/* ../../../dist/packages/php-wasm/node"
+				],
+				"parallel": false
+			},
+			"dependsOn": ["build:copy-wasms"]
+		},
+		"build:bundle": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "node packages/php-wasm/node/build.js",
+				"parallel": false
+			},
+			"dependsOn": ["build:mkdir"]
+		},
+		"build:mkdir": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": ["mkdir -p dist/packages/php-wasm/node"],
+				"parallel": false
+			}
+		},
+		"recompile-php:all": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"nx run php-wasm-node:recompile-php:jspi:all",
+					"nx run php-wasm-node:recompile-php:asyncify:all"
+				],
+				"parallel": false
+			}
+		},
+		"recompile-php:jspi": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"node packages/php-wasm/compile/build.js --PLATFORM=node --output-dir=packages/php-wasm/node/jspi --WITH_JSPI=yes"
+				],
+				"parallel": false
+			}
+		},
+		"recompile-php:jspi:all": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"node packages/php-wasm/compile/build.js --PLATFORM=node --PHP_VERSION=8.2 --output-dir=packages/php-wasm/node/jspi --WITH_JSPI=yes"
+				],
+				"parallel": false
+			}
+		},
+		"recompile-php:asyncify": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"node packages/php-wasm/compile/build.js --PLATFORM=node --output-dir=packages/php-wasm/node/asyncify"
+				],
+				"parallel": false
+			}
+		},
+		"recompile-php:asyncify:all": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"node packages/php-wasm/compile/build.js --PLATFORM=node --PHP_VERSION=8.2 --output-dir=packages/php-wasm/node/asyncify"
+				],
+				"parallel": false
+			}
+		},
+
+		"package-json": {
+			"executor": "@typo3-playground/nx-extensions:package-json",
+			"options": {
+				"tsConfig": "packages/php-wasm/node/tsconfig.lib.json",
+				"outputPath": "dist/packages/php-wasm/node",
+				"buildTarget": "php-wasm-node:build:production"
+			}
+		},
+		"publish": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "node tools/scripts/publish.mjs php-wasm-node {args.ver} {args.tag}",
+				"parallel": false
+			},
+			"dependsOn": ["build"]
+		},
+		"test": {
+			"executor": "@nx/vite:test",
+			"outputs": ["{workspaceRoot}/coverage/packages/php-wasm/node"],
+			"options": {
+				"passWithNoTests": true,
+				"reportsDirectory": "../../../coverage/packages/php-wasm/node"
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": ["packages/php-wasm/node/**/*.ts"]
+			}
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"tsc -p packages/php-wasm/node/tsconfig.lib.json --noEmit",
+					"tsc -p packages/php-wasm/node/tsconfig.spec.json --noEmit"
+				]
+			}
+		}
+	},
+	"tags": ["scope:php-binaries"]
+}

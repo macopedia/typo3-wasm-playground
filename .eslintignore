@@ -1,0 +1,15 @@
+node_modules
+packages/php-wasm/node/public
+packages/php-wasm/web/public
+packages/php-wasm/compile/php
+packages/playground/compile-wordpress/build-assets
+__pycache__
+packages/playground/typo3-builds/src/wordpress
+packages/playground/typo3-builds/public
+packages/playground/sync/src/test/wp-*
+packages/playground/data-liberation/tests/fixtures
+packages/php-wasm/node/src/test/__test*
+*.timestamp-1678999213403.mjs
+.local
+.vscode
+playwright-report

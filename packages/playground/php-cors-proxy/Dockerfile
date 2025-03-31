@@ -1,0 +1,4 @@
+FROM php:8.3-apache
+COPY . /var/www/html
+ENV PLAYGROUND_CORS_PROXY_DISABLE_RATE_LIMIT=true
+EXPOSE 80

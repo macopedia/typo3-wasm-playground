@@ -1,0 +1,214 @@
+{
+	"name": "playground-website",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/playground/website/src",
+	"projectType": "application",
+	"implicitDependencies": ["playground-remote"],
+	"targets": {
+		"build": {
+			"executor": "nx:noop",
+			"dependsOn": ["build:wasm-typo3-net"]
+		},
+		"build:wasm-typo3-net": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"rimraf --no-preserve-root ./wasm-typo3-net",
+					"mkdir ./wasm-typo3-net",
+					"cp -r ./blueprints/blueprint-schema.json ./wasm-typo3-net/",
+					"cp -r ./client ./wasm-typo3-net/",
+					"cp -r ./remote/* ./wasm-typo3-net/",
+					"cp -r ./website/* ./wasm-typo3-net/",
+					"cp ../../../packages/playground/php-cors-proxy/cors-proxy.php ./wasm-typo3-net/",
+					"cp ../../../packages/playground/php-cors-proxy/cors-proxy-functions.php ./wasm-typo3-net/",
+					"cat ./remote/.htaccess ./website/.htaccess > ./wasm-typo3-net/.htaccess",
+					"curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar > wasm-typo3-net/wp-cli.phar",
+					"cat wasm-typo3-net/wp-cli.phar | gzip -c -9 > wasm-typo3-net/wp-cli.phar.gz"
+				],
+				"cwd": "dist/packages/playground",
+				"parallel": false
+			},
+			"dependsOn": ["build:standalone", "^build"]
+		},
+		"build:standalone": {
+			"executor": "@nx/vite:build",
+			"outputs": ["{options.outputPath}"],
+			"defaultConfiguration": "production",
+			"options": {
+				"outputPath": "dist/packages/playground/website"
+			},
+			"configurations": {
+				"development": {
+					"mode": "development"
+				},
+				"production": {
+					"mode": "production",
+					"logLevel": "info"
+				}
+			},
+			"dependsOn": ["^build"]
+		},
+		"dev": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"nx run playground-php-cors-proxy:start",
+					"nx dev playground-remote --configuration=development-for-website",
+					"sleep 1; nx dev:standalone playground-website --hmr --output-style=stream-without-prefixes"
+				],
+				"parallel": true,
+				"color": true
+			}
+		},
+		"dev:standalone": {
+			"executor": "@nx/vite:dev-server",
+			"defaultConfiguration": "development",
+			"options": {
+				"buildTarget": "playground-website:build"
+			},
+			"configurations": {
+				"development": {
+					"buildTarget": "playground-website:build:standalone:development",
+					"hmr": true
+				},
+				"production": {
+					"buildTarget": "playground-website:build:standalone:production",
+					"hmr": false
+				}
+			}
+		},
+		"preview": {
+			"executor": "@nx/vite:preview-server",
+			"options": {
+				"buildTarget": "playground-website:build",
+				"staticFilePath": "dist/packages/playground/wasm-typo3-net",
+				"port": 5932
+			},
+			"configurations": {
+				"ci": {
+					"port": 80
+				}
+			}
+		},
+		"test": {
+			"executor": "@nx/vite:test",
+			"outputs": ["{workspaceRoot}/coverage/packages/playground/website"],
+			"options": {
+				"passWithNoTests": true,
+				"reportsDirectory": "../../../coverage/packages/playground/website"
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": [
+					"packages/playground/website/**/*.{ts,tsx,js,jsx}"
+				]
+			}
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"tsc -p packages/playground/website/tsconfig.spec.json --noEmit",
+					"tsc -p packages/playground/website/tsconfig.app.json --noEmit"
+				]
+			}
+		},
+		"e2e": {
+			"executor": "@nx/cypress:cypress",
+			"options": {
+				"cypressConfig": "packages/playground/website/cypress.config.ts",
+				"testingType": "e2e",
+				"devServerTarget": "playground-website:dev:local",
+				"browser": "chrome"
+			},
+			"configurations": {
+				"ci": {
+					"devServerTarget": "playground-website:preview:ci",
+					"baseUrl": "http://localhost/website-server/"
+				}
+			},
+			"dependsOn": ["build"]
+		},
+		"e2e:dev": {
+			"executor": "nx:noop",
+			"dependsOn": ["dev", "e2e:dev:cypress"]
+		},
+		"e2e:dev:cypress": {
+			"executor": "@nx/cypress:cypress",
+			"options": {
+				"cypressConfig": "packages/playground/website/cypress.config.ts",
+				"testingType": "e2e",
+				"headless": false,
+				"baseUrl": "http://127.0.0.1:5400/website-server/"
+			}
+		},
+		"e2e:playwright": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"npx playwright test --config=packages/playground/website/playwright/playwright.config.ts"
+				],
+				"parallel": false
+			}
+		},
+		"e2e:playwright:ci": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"npx playwright test --config=packages/playground/website/playwright/playwright.ci.config.ts"
+				],
+				"parallel": false
+			}
+		},
+		"e2e:playwright:prepare-app-deploy-and-offline-mode": {
+			"executor": "nx:noop",
+			"dependsOn": [
+				"e2e:playwright:prepare-app-deploy-and-offline-mode:build-current-version",
+				"e2e:playwright:prepare-app-deploy-and-offline-mode:unzip-old-versions"
+			]
+		},
+		"e2e:playwright:prepare-app-deploy-and-offline-mode:unzip-old-versions": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"unzip ./packages/playground/website/playwright/deploy-e2e-old-release.zip",
+					"unzip ./packages/playground/website/playwright/deploy-e2e-mid-release.zip"
+				]
+			}
+		},
+		"e2e:playwright:prepare-app-deploy-and-offline-mode:build-old-version": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"export CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)",
+					"git fetch origin tag v0.9.0 --no-tags",
+					"git checkout tags/v0.9.0 -b v0.9.0",
+					"npm install",
+					"npm run build",
+					"PLAYGROUND_URL=http://localhost:7999 npx nx run playground-website:build:wasm-typo3-net",
+					"rm -rf dist/packages/playground/wasm-typo3-net-old || true",
+					"mv dist/packages/playground/wasm-typo3-net dist/packages/playground/wasm-typo3-net-old",
+					"git stash",
+					"git checkout $CURRENT_BRANCH",
+					"npm install"
+				],
+				"parallel": false
+			}
+		},
+		"e2e:playwright:prepare-app-deploy-and-offline-mode:build-current-version": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"rm -rf dist/packages/playground/wasm-typo3-net-new || true",
+					"cp -rf dist/packages/playground/wasm-typo3-net dist/packages/playground/wasm-typo3-net-new"
+				],
+				"parallel": false
+			},
+			"dependsOn": ["build"]
+		}
+	},
+	"tags": ["scope:web-client"]
+}

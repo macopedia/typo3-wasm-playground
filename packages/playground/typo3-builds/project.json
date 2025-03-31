@@ -1,0 +1,124 @@
+{
+	"name": "playground-typo3-builds",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/playground/typo3-builds/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "nx:noop",
+			"dependsOn": ["build:README"]
+		},
+		"build:README": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"cp packages/playground/typo3-builds/README.md dist/packages/playground/typo3-builds"
+				]
+			},
+			"dependsOn": ["build:package-json"]
+		},
+		"build:package-json": {
+			"executor": "@typo3-playground/nx-extensions:package-json",
+			"options": {
+				"tsConfig": "packages/playground/typo3-builds/tsconfig.lib.json",
+				"outputPath": "dist/packages/playground/typo3-builds",
+				"buildTarget": "playground-typo3-builds:build:bundle:production"
+			},
+			"dependsOn": ["build:bundle"]
+		},
+		"build:bundle": {
+			"executor": "@nx/vite:build",
+			"outputs": ["{options.outputPath}"],
+			"defaultConfiguration": "production",
+			"emptyOutDir": true,
+			"options": {
+				"outputPath": "dist/packages/playground/typo3-builds"
+			},
+			"configurations": {
+				"development": {
+					"mode": "development"
+				},
+				"production": {
+					"mode": "production"
+				}
+			},
+			"dependsOn": ["^build", "build:clear-dist-dir"]
+		},
+		"build:clear-dist-dir": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": ["rm -rf dist/packages/playground/typo3-builds"]
+			}
+		},
+		"bundle-typo3": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "node packages/playground/typo3-builds/build/build.js --typo3-version={args.wp-version} --output-js=packages/playground/typo3-builds/src/typo3 --output-assets=packages/playground/typo3-builds/public",
+				"parallel": false
+			}
+		},
+		"bundle-typo3:all": {
+			"executor": "nx:noop",
+			"dependsOn": [
+				"bundle-typo3:nightly",
+				"bundle-typo3:major-and-beta"
+			]
+		},
+		"bundle-typo3:nightly": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"node packages/playground/typo3-builds/build/build.js --typo3-version=nightly --output-js=packages/playground/typo3-builds/src/typo3 --output-assets=packages/playground/typo3-builds/public"
+				],
+				"parallel": false
+			}
+		},
+		"bundle-typo3:major-and-beta": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"node packages/playground/typo3-builds/build/build.js --typo3-version=latest-minus-3 --output-js=packages/playground/typo3-builds/src/typo3 --output-assets=packages/playground/typo3-builds/public",
+					"node packages/playground/typo3-builds/build/build.js --typo3-version=latest-minus-2 --output-js=packages/playground/typo3-builds/src/typo3 --output-assets=packages/playground/typo3-builds/public",
+					"node packages/playground/typo3-builds/build/build.js --typo3-version=latest-minus-1 --output-js=packages/playground/typo3-builds/src/typo3 --output-assets=packages/playground/typo3-builds/public",
+					"node packages/playground/typo3-builds/build/build.js --typo3-version=latest --output-js=packages/playground/typo3-builds/src/typo3 --output-assets=packages/playground/typo3-builds/public",
+					"node packages/playground/typo3-builds/build/build.js --typo3-version=beta --output-js=packages/playground/typo3-builds/src/typo3 --output-assets=packages/playground/typo3-builds/public || true"
+				],
+				"parallel": false
+			}
+		},
+		"bundle-sqlite-database": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"node packages/playground/typo3-builds/build/refresh-sqlite-integration-plugin.js --output-dir=packages/playground/typo3-builds/src/sqlite-database-integration "
+				],
+				"parallel": false
+			}
+		},
+		"test": {
+			"executor": "nx:noop",
+			"dependsOn": ["test:vite"]
+		},
+		"test:vite": {
+			"executor": "@nx/vite:test",
+			"outputs": [
+				"{workspaceRoot}/coverage/packages/playground/typo3-builds"
+			],
+			"options": {
+				"passWithNoTests": true,
+				"reportsDirectory": "../../../coverage/packages/playground/typo3-builds"
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": [
+					"packages/playground/typo3-builds/**/*.ts",
+					"packages/playground/typo3-builds/package.json"
+				]
+			}
+		}
+	},
+	"tags": []
+}

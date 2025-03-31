@@ -1,0 +1,38 @@
+{
+	"name": "@typo3-playground/sync",
+	"version": "0.0.1",
+	"description": "Sync changes across multiple WordPress Playground clients.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WordPress/wordpress-playground"
+	},
+	"homepage": "https://developer.wordpress.org/playground",
+	"author": "The WordPress contributors",
+	"contributors": [
+		{
+			"name": "Adam Zielinski",
+			"email": "adam@adamziel.com",
+			"url": "https://github.com/adamziel"
+		}
+	],
+	"exports": {
+		".": {
+			"import": "./index.js",
+			"require": "./index.cjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"typedoc": {
+		"entryPoint": "./src/index.ts",
+		"readmeFile": "./README.md",
+		"displayName": "@typo3-playground/sync",
+		"tsconfig": "./tsconfig.lib.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"directory": "../../../dist/packages/playground/sync"
+	},
+	"license": "GPL-2.0-or-later",
+	"type": "module",
+	"private": true
+}

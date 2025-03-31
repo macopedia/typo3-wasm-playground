@@ -1,0 +1,38 @@
+{
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"eslint.validate": [
+		"json"
+	],
+	"files.associations": {
+		"*.embeddedhtml": "html",
+		"api-extractor-base.json": "jsonc",
+		"__string": "c",
+		"atomic": "c",
+		"cstring": "c",
+		"memory": "c",
+		"variant": "c",
+		"typeinfo": "c",
+		"stdio.h": "c",
+		"array": "c",
+		"string": "c",
+		"string_view": "c",
+		"vector": "c",
+		"unistd.h": "c",
+		"zend_api.h": "c"
+	},
+	"autoImportFileExcludePatterns": [
+		"@typo3-playground/client"
+	],
+	"frontMatter.content.pageFolders": [
+		{
+			"title": "Start here",
+			"path": "[[workspace]]/packages/docs/site/docs/01-start-here"
+		}
+	],
+	"git.ignoreLimitWarning": true,
+	"C_Cpp.errorSquiggles": "disabled",
+	"git.branchProtection": [
+		"trunk"
+	],
+	"php.version": "7.2"
+}

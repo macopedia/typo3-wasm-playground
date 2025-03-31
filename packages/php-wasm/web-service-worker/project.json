@@ -1,0 +1,60 @@
+{
+	"name": "php-wasm-web-service-worker",
+	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+	"sourceRoot": "packages/php-wasm/web-service-worker/src",
+	"projectType": "library",
+	"targets": {
+		"build": {
+			"executor": "@typo3-playground/nx-extensions:package-json",
+			"options": {
+				"tsConfig": "packages/php-wasm/web-service-worker/tsconfig.lib.json",
+				"outputPath": "dist/packages/php-wasm/web-service-worker",
+				"buildTarget": "php-wasm-web-service-worker:build:bundle:production"
+			}
+		},
+		"build:package-json": {
+			"executor": "@typo3-playground/nx-extensions:package-json",
+			"options": {
+				"tsConfig": "packages/php-wasm/web-service-worker/tsconfig.lib.json",
+				"outputPath": "dist/packages/php-wasm/web-service-worker",
+				"buildTarget": "php-wasm-web-service-worker:build:bundle:production"
+			}
+		},
+		"build:bundle": {
+			"executor": "@nx/vite:build",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"emptyOutDir": false,
+				"outputPath": "dist/packages/php-wasm/web-service-worker"
+			}
+		},
+		"lint": {
+			"executor": "@nx/linter:eslint",
+			"outputs": ["{options.outputFile}"],
+			"options": {
+				"lintFilePatterns": [
+					"packages/php-wasm/web-service-worker/**/*.ts"
+				]
+			}
+		},
+		"test": {
+			"executor": "@nx/vite:test",
+			"outputs": [
+				"{workspaceRoot}/coverage/packages/php-wasm/web-service-worker"
+			],
+			"options": {
+				"passWithNoTests": true,
+				"reportsDirectory": "../../../coverage/packages/php-wasm/web-service-worker"
+			}
+		},
+		"typecheck": {
+			"executor": "nx:run-commands",
+			"options": {
+				"commands": [
+					"tsc -p packages/php-wasm/web-service-worker/tsconfig.lib.json --noEmit"
+				]
+			}
+		}
+	},
+	"tags": []
+}

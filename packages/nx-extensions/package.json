@@ -1,0 +1,8 @@
+{
+	"name": "@typo3-playground/nx-extensions",
+	"version": "0.1.0",
+	"main": "src/index.js",
+	"generators": "./generators.json",
+	"executors": "./executors.json",
+	"private": true
+}

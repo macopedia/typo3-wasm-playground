@@ -1,0 +1,50 @@
+{
+	"name": "@typo3-playground/storage",
+	"version": "1.0.25",
+	"description": "Bindings for storing WordPress Playground on different backends.",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/WordPress/wordpress-playground"
+	},
+	"homepage": "https://developer.wordpress.org/playground",
+	"author": "The WordPress contributors",
+	"contributors": [
+		{
+			"name": "Adam Zielinski",
+			"email": "adam@adamziel.com",
+			"url": "https://github.com/adamziel"
+		}
+	],
+	"exports": {
+		".": {
+			"import": "./index.js",
+			"require": "./index.cjs"
+		},
+		"./package.json": "./package.json"
+	},
+	"typedoc": {
+		"entryPoint": "./src/index.ts",
+		"readmeFile": "./README.md",
+		"displayName": "@typo3-playground/storage",
+		"tsconfig": "./tsconfig.lib.json"
+	},
+	"publishConfig": {
+		"access": "public",
+		"directory": "../../../dist/packages/playground/storage"
+	},
+	"license": "GPL-2.0-or-later",
+	"type": "module",
+	"dependencies": {
+		"async-lock": "^1.4.1",
+		"clean-git-ref": "^2.0.1",
+		"crc-32": "^1.2.0",
+		"diff3": "0.0.3",
+		"ignore": "^5.1.4",
+		"minimisted": "^2.0.0",
+		"pako": "^1.0.10",
+		"pify": "^4.0.1",
+		"readable-stream": "^3.4.0",
+		"sha.js": "^2.4.9",
+		"simple-get": "^4.0.1"
+	}
+}
