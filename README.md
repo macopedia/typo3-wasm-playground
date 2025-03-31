@@ -5,6 +5,7 @@ This project is a **fork** of the [WordPress Playground](https://github.com/Word
 **Live Demo:** [https://typo3-playground-edc132.macopedia.io
 ](https://typo3-playground-edc132.macopedia.io
 )  
+**Backend credentials**: admin / password
 
 ---
 
