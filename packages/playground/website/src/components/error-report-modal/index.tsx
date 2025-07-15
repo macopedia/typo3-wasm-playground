@@ -119,7 +119,7 @@ export function ErrorReportModal(props: { blueprint: Blueprint }) {
 					We were unable to submit the error report. Please try again
 					or open an{' '}
 					<a
-						href="https://github.com/WordPress/wordpress-playground/issues/"
+						href="https://github.com/macpopedia/typo3-wasm-playground/issues/"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -132,11 +132,11 @@ export function ErrorReportModal(props: { blueprint: Blueprint }) {
 				<>
 					Your report has been submitted to the{' '}
 					<a
-						href="https://wordpress.slack.com/archives/C06Q5DCKZ3L"
+						href="https://typo3.slack.com/archives/C08KGANSG6P"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						Making WordPress #playground-logs Slack channel
+						TYPO3 #typo3-wasm Slack channel
 					</a>{' '}
 					and will be reviewed by the team.
 				</>
