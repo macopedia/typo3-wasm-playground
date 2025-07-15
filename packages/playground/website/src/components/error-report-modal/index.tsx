@@ -119,7 +119,7 @@ export function ErrorReportModal(props: { blueprint: Blueprint }) {
 					We were unable to submit the error report. Please try again
 					or open an{' '}
 					<a
-						href="https://github.com/macpopedia/typo3-wasm-playground/issues/"
+						href="https://github.com/macopedia/typo3-wasm-playground/issues/"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
